@@ -25,9 +25,10 @@ object SparkImage {
   val HISTOGRAM_PATH      = "data/model/histograms"
   val RANDOM_FOREST_PATH  = "data/model/nbmodel"
   val TEST_INPUT_PATH     = "data/test"
-  val TEST_INPUT_PATH2    = "data/test2"
+  //val TEST_INPUT_PATH2    = "data/test2"
 
-  val IMAGE_CATEGORIES    = List("bookcase", "dc", "firefly", "lotr", "shelf", "starwars", "table", "weapon", "who")
+  val IMAGE_CATEGORIES    = List("dccomics", "doctorwho", "firefly", "lotr", "shelf",
+    "spiderman", "starwars", "table", "weapon")
 
 
   def main(args: Array[String]): Unit = {
@@ -45,7 +46,7 @@ object SparkImage {
     val sc=new SparkContext(conf)
 
     //Load our images
-    val flags = sc.wholeTextFiles(TRAIN_IMAGE_PATH + "/*/*.jpeg")
+    val flags = sc.wholeTextFiles(TRAIN_IMAGE_PATH + "/*/*.jpg")
 
     //Now run the extraction work on our images, borrowing from the ImageUtils class written for the
     //sample code from the lab assignment
@@ -67,7 +68,7 @@ object SparkImage {
       */
     generateRandomForestModel(sc)
 
-    val testImages = sc.wholeTextFiles(TEST_INPUT_PATH2 + "/*/*.jpeg")
+    val testImages = sc.wholeTextFiles(TEST_INPUT_PATH + "/*/*.jpg")
     val testImagesArray = testImages.collect()
     var predictionLabels = List[String]()
     testImagesArray.foreach(f => {

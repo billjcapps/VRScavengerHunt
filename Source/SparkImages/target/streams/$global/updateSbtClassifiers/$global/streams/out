@@ -1775,9 +1775,9 @@
 [debug] 	[NOT REQUIRED] org.scala-sbt#test-interface;1.0!test-interface.jar
 [debug] 	[NOT REQUIRED] org.scala-sbt#apply-macro;0.13.13!apply-macro.jar
 [debug] 	[NOT REQUIRED] org.scala-sbt#template-resolver;0.1!template-resolver.jar
-[debug] :: resolution report :: resolve 808ms :: artifacts dl 53ms
+[debug] :: resolution report :: resolve 1064ms :: artifacts dl 49ms
 [debug] 	report for default#sparkimages$sbt_2.10;1.0 default produced in C:\Users\ac010168\workspaces\umkc\VRScavengerHunt\Source\SparkImages\target\resolution-cache\reports\default-sparkimages$sbt_2.10-default.xml
-[debug] 	resolve done (808ms resolve - 53ms download)
+[debug] 	resolve done (1064ms resolve - 49ms download)
 [debug] Using inline dependencies specified in Scala.
 [debug] :: resolving dependencies :: default#sparkimages$sources_2.10;1.0
 [debug] 	confs: [default]
@@ -2471,6 +2471,6 @@
 [debug] 	[NOT REQUIRED] org.scala-lang#scala-compiler;2.10.6!scala-compiler.jar(src)
 [debug] 	[NOT REQUIRED] org.scala-sbt#interface;0.13.13!interface.jar(src)
 [debug] 	[NOT REQUIRED] org.scala-sbt#logging;0.13.13!logging.jar(src)
-[debug] :: resolution report :: resolve 180ms :: artifacts dl 47ms
+[debug] :: resolution report :: resolve 237ms :: artifacts dl 57ms
 [debug] 	report for default#sparkimages$sources_2.10;1.0 default produced in C:\Users\ac010168\workspaces\umkc\VRScavengerHunt\Source\SparkImages\target\resolution-cache\reports\default-sparkimages$sources_2.10-default.xml
-[debug] 	resolve done (180ms resolve - 47ms download)
+[debug] 	resolve done (237ms resolve - 57ms download)
