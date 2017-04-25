@@ -90,7 +90,7 @@ public class MainVRActivity extends Activity {
 
         AssetManager assetManager = getAssets();
         try {
-            InputStream inputStream = assetManager.open(ANDES_ASSET_NAME);
+            InputStream inputStream = assetManager.open(GAMEROOM_ASSET_NAME);
             options.inputType = VrPanoramaView.Options.TYPE_STEREO_OVER_UNDER;
             panoImage = BitmapFactory.decodeStream(inputStream);
 
@@ -100,7 +100,7 @@ public class MainVRActivity extends Activity {
             myPanorama.loadImageFromBitmap(panoImage, options);
             inputStream.close();
 
-            InputStream inputStream2 = assetManager.open(ANDES_ASSET_WRAP_NAME);
+            InputStream inputStream2 = assetManager.open(GAMEROOM_ASSET_WRAP_NAME);
             wrapImage = BitmapFactory.decodeStream(inputStream2);
             inputStream2.close();
         } catch (IOException e) {
