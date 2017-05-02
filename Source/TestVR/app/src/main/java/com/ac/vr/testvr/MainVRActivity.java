@@ -8,16 +8,32 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
+import android.renderscript.Sampler;
+import android.speech.tts.TextToSpeech;
+import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.vr.sdk.widgets.common.VrWidgetView;
 import com.google.vr.sdk.widgets.pano.VrPanoramaEventListener;
 import com.google.vr.sdk.widgets.pano.VrPanoramaView;
 
+import org.apache.http.params.HttpParams;
+import org.json.JSONObject;
+
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.Key;
+import java.util.Locale;
 import java.util.Random;
+
+import static android.R.attr.bitmap;
 
 /**
  * This class launches a fairly simple VrPanoramaView, then allows the user to take a screencap
@@ -61,9 +77,23 @@ public class MainVRActivity extends Activity {
     private final static String ANDES_ASSET_WRAP_NAME    = "andeshalfsplit.jpg";
     private final static String GAMEROOM_ASSET_NAME      = "gameroom.jpg";
     private final static String GAMEROOM_ASSET_WRAP_NAME = "gameroomhalfsplit.jpg";
+    private int stages = 1;
+    private TextToSpeech tts;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        tts=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    tts.setLanguage(Locale.US);
+                }
+            }
+        });
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_vr);
 
@@ -82,7 +112,28 @@ public class MainVRActivity extends Activity {
 
         myPanorama.setDisplayMode(VrWidgetView.DisplayMode.FULLSCREEN_STEREO);
         loadPhotoSphere();
+
+
     }
+
+    private void adviseItem() {
+        tts.setSpeechRate((float)0.75);
+
+        switch (stages) {
+            case 1: tts.speak("Find the FIrefly poster.", TextToSpeech.QUEUE_FLUSH,null,null);
+                    stages = stages + 1;
+                    break;
+            case 2: tts.speak("That's not it.", TextToSpeech.QUEUE_FLUSH,null,null);
+                    stages = stages + 1;
+                    break;
+            case 3: tts.speak("You found it!", TextToSpeech.QUEUE_FLUSH,null,null);
+                    stages = stages + 1;
+                    break;
+
+        }
+
+    }
+
 
     private void loadPhotoSphere() {
         //This could take a while. Should do on a background thread, but fine for current example
@@ -106,6 +157,7 @@ public class MainVRActivity extends Activity {
         } catch (IOException e) {
             Log.e(TAG, "Exception in loadPhotoSphere: " + e.getMessage() );
         }
+
     }
 
     @Override
@@ -127,6 +179,8 @@ public class MainVRActivity extends Activity {
     }
 
     private void takeScreenshot() {
+        adviseItem();
+
         //DEBUG
         Log.d(TAG, "I'm in your screenshot, killing your dudez");
         try {
@@ -189,10 +243,29 @@ public class MainVRActivity extends Activity {
             croppedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.flush();
             fos.close();
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            croppedBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream .toByteArray();
+            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
             croppedBitmap.recycle();
-
             //If the snapshot succeeds, trigger the feedback vibration
+
+
+
+
+
+
             vibrator.vibrate(500);
+            JSONObject json = new JSONObject();
+            json.put("imageBase64",encoded);
+            URL url = new URL("http://70.94.39.41:5000/tensor/predict");
+            HttpURLConnection client = (HttpURLConnection) url.openConnection();
+            client.setRequestMethod("POST");
+            client.setRequestProperty("Key","Value");
+            client.setDoOutput(true);
+            OutputStream outputPost = new BufferedOutputStream(client.getOutputStream());
+
+
         } catch (Throwable e) {
             // Several error may come out with file handling or OOM
             e.printStackTrace();
